@@ -39,17 +39,6 @@ CREATE TABLE Borrow (
     FOREIGN KEY (BookID) REFERENCES Book(BookID)
 );
 
-
--- 5. Create Wishlist table
-CREATE TABLE Wishlist (
-    WishlistID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT,
-    BookID INT,
-    AddedDate DATE DEFAULT GETDATE(),
-    FOREIGN KEY (UserID) REFERENCES Account(AccountID),
-    FOREIGN KEY (BookID) REFERENCES Book(BookID)
-);
-
 -- 6. Create Review table
 CREATE TABLE Review (
     ReviewID INT IDENTITY(1,1) PRIMARY KEY,
@@ -60,18 +49,6 @@ CREATE TABLE Review (
     ReviewDate DATE DEFAULT GETDATE(),
     FOREIGN KEY (UserID) REFERENCES Account(AccountID),
     FOREIGN KEY (BookID) REFERENCES Book(BookID)
-);
-
--- 7. Create Penalty table
-CREATE TABLE Penalty (
-    PenaltyID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT,
-    BorrowID INT,
-    PenaltyDate DATE DEFAULT GETDATE(),
-    PenaltyAmount DECIMAL(10, 2),
-    PenaltyStatus NVARCHAR(20) CHECK (PenaltyStatus IN ('Resolved', 'Unresolved')) DEFAULT 'Unresolved',
-    FOREIGN KEY (UserID) REFERENCES Account(AccountID),
-    FOREIGN KEY (BorrowID) REFERENCES Borrow(BorrowID)
 );
 
 -- 8. Create Feedback table
