@@ -71,6 +71,7 @@
 
     <!-- Borrow Modal -->
     <div id="borrowModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onclick="borrowBook()">Borrow</button>
         <div class="bg-white p-8 rounded-lg max-w-lg w-full mx-4">
             <h2 class="text-2xl font-bold mb-4">Borrow Book</h2>
             <form id="borrowForm" class="space-y-4">
@@ -89,6 +90,15 @@
             </form>
         </div>
     </div>
+    <div class="relative">
+        <input id="search" type="text" placeholder="Search books..." class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
+        <button class="absolute right-3 top-2 text-gray-600"><i class="fas fa-search"></i></button>
+        <div id="suggestions" class="hidden absolute top-full mt-1 bg-white w-full shadow-md rounded max-h-48 overflow-y-auto z-10">
+            <!-- Suggestions will be dynamically added here -->
+        </div>
+    </div>
+    
+    
 
     <script>
         const search = document.getElementById('search');
@@ -184,7 +194,6 @@
                     <div class="space-y-3">
                         <h3 class="text-3xl font-semibold text-gray-800">${book.title}</h3>
                         <p class="text-lg text-gray-600">by ${book.author}</p>
-                        <p class="text-sm text-gray-500">Position: Shelf 3, Row 2</p>
                         <p class="text-sm text-gray-500">Available for borrowing: Yes</p>
                         <p class="text-sm text-gray-500">Publish Year: ${book.publishYear}</p>
                         <p class="text-sm text-gray-500">Genre: ${book.genre}</p>
@@ -261,6 +270,72 @@
                 closeBorrowModal();
             }
         });
+        // Function to filter books and display suggestions
+        search.addEventListener('input', function () {
+    const query = this.value.trim().toLowerCase();
+    suggestions.innerHTML = ''; // Clear previous suggestions
+
+    if (query) {
+        const matches = bookTitles.filter(title => title.toLowerCase().includes(query));
+        if (matches.length > 0) {
+            matches.forEach(title => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'p-2 hover:bg-gray-100 cursor-pointer'; // Tailwind classes
+                suggestionItem.textContent = title;
+                suggestionItem.addEventListener('click', () => {
+                    search.value = title; // Fill the search bar with the selected title
+                    suggestions.innerHTML = ''; // Clear suggestions
+                    showBookDetails(title); // Show book details in the modal
+                });
+                suggestions.appendChild(suggestionItem);
+            });
+            suggestions.classList.remove('hidden');
+        } else {
+            suggestions.classList.add('hidden');
+        }
+    } else {
+        suggestions.classList.add('hidden');
+    }
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', function (e) {
+    if (!search.contains(e.target) && !suggestions.contains(e.target)) {
+        suggestions.classList.add('hidden');
+    }
+});
+
+// Hàm Borrow sách
+function borrowBook() {
+    const bookTitle = document.querySelector("#bookDetails h3").textContent; // Lấy tiêu đề sách từ modal
+    const bookAuthor = document.querySelector("#bookDetails p.text-lg").textContent.replace("by ", ""); // Lấy tên tác giả
+    const pickupDate = document.getElementById("pickupDate").value; // Ngày mượn
+    const returnDate = document.getElementById("returnDate").value; // Ngày trả
+
+    if (!pickupDate || !returnDate) {
+        alert("Please select a valid pickup and return date.");
+        return;
+    }
+
+    // Tạo đối tượng sách mượn
+    const borrowedBook = {
+        title: bookTitle,
+        author: bookAuthor,
+        pickupDate,
+        returnDate,
+        status: "Still Valid"
+    };
+
+    // Lưu sách vào localStorage
+    let borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || [];
+    borrowedBooks.push(borrowedBook);
+    localStorage.setItem("borrowedBooks", JSON.stringify(borrowedBooks));
+
+    // Đóng popup và thông báo thành công
+    closeBorrowModal();
+    alert("Book borrowed successfully!");
+}
+
     </script>
 </body>
 </html>

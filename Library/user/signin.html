@@ -64,23 +64,31 @@
     <script>
         // Xử lý sự kiện khi nhấn "Continue"
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();  // Ngừng hành động mặc định (tải lại trang)
+    event.preventDefault(); // Ngừng hành động mặc định (tải lại trang)
 
-            // Lấy giá trị từ các trường đầu vào
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    // Lấy giá trị từ các trường đầu vào
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-            // Kiểm tra thông tin đầu vào
-            if (!username || !password) {
-                alert('Please enter both username and password');
-                return;
-            }
+    // Lấy thông tin người dùng từ localStorage
+    const userData = JSON.parse(localStorage.getItem('userData'));
 
-            // Bạn có thể gửi dữ liệu đến server ở đây (ví dụ: sử dụng AJAX)
+    // Kiểm tra thông tin đăng nhập
+    if (!userData) {
+        alert('No user found. Please sign up first.');
+        return;
+    }
 
-            // Chuyển hướng tới trang homepage sau khi đăng nhập thành công
-            window.location.href = '../user/homepage.html';  // Thay đổi '/homepage' bằng URL trang chủ của bạn
-        });
+    if (userData.username === username && userData.password === password) {
+        // Đăng nhập thành công
+        alert('Login successful!');
+        window.location.href = '../user/homepage.html'; // Thay đổi URL trang chủ của bạn
+    } else {
+        // Sai thông tin đăng nhập
+        alert('Incorrect username or password. Please try again.');
+    }
+});
+
     </script>
 
 </body>

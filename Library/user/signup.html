@@ -59,32 +59,34 @@
 
     <script>
         document.getElementById('signupForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Ngừng hành động mặc định (tải lại trang)
+    event.preventDefault(); // Ngừng hành động mặc định (tải lại trang)
 
-            // Lấy giá trị từ các trường đầu vào
-            const email = document.getElementById('email').value;
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    // Lấy giá trị từ các trường đầu vào
+    const email = document.getElementById('email').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-            // Kiểm tra thông tin đầu vào
-            if (!email || !username || !password) {
-                alert('Please fill all fields');
-                return;
-            }
+    // Kiểm tra thông tin đầu vào
+    if (!email || !username || !password) {
+        alert('Please fill all fields');
+        return;
+    }
 
-            // Lưu thông tin vào localStorage
-            const userData = {
-                email: email,
-                username: username,
-                password: password
-            };
+    // Lưu thông tin vào localStorage
+    const userData = {
+        email: email,
+        username: username,
+        password: password
+    };
 
-            // Lưu thông tin người dùng vào localStorage
-            localStorage.setItem('userData', JSON.stringify(userData));
+    // Lưu thông tin người dùng vào localStorage
+    localStorage.setItem('userData', JSON.stringify(userData));
 
-            // Chuyển hướng đến trang Sign In
-            window.location.href = '../user/signin.html';
-        });
+    // Chuyển hướng đến trang Sign In
+    alert('Sign up successful! Please log in.');
+    window.location.href = '../user/signin.html';
+});
+
     </script>
 
 </body>
