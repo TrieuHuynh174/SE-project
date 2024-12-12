@@ -24,7 +24,7 @@
             </div>
             <!-- Welcome Message -->
             <p class="text-gray-500 text-lg mb-2">Create your account</p>
-            <h2 class="text-xl font-semibold mb-6">Sign Up to get started</h2>
+            <h2 class="text-xl text-center font-semibold mb-6">Sign Up to get started</h2>
             
             <!-- Form -->
             <form class="space-y-4" id="signupForm">
@@ -49,14 +49,7 @@
                         <label for="id" class="block text-gray-700 mb-1">ID</label>
                         <input type="text" id="id" placeholder="Enter your ID" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
                     </div>
-                    <div>
-                        <label for="birthdate" class="block text-gray-700 mb-1">Birthdate</label>
-                        <input type="date" id="birthdate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label for="address" class="block text-gray-700 mb-1">Address</label>
-                        <input type="text" id="address" placeholder="Enter your address" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
+                    
                     <div>
                         <label for="phone" class="block text-gray-700 mb-1">Phone</label>
                         <input type="tel" id="phone" placeholder="Enter your phone number" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
@@ -94,24 +87,22 @@
     <script>
         document.getElementById('signupForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Ngừng hành động mặc định (tải lại trang)
-
+    
             // Lấy giá trị từ các trường đầu vào
             const email = document.getElementById('email').value;
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const name = document.getElementById('name').value;
             const id = document.getElementById('id').value;
-            const birthdate = document.getElementById('birthdate').value;
-            const address = document.getElementById('address').value;
             const phone = document.getElementById('phone').value;
-            const gender = document.querySelector('input[name="gender"]:checked').value;
-
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+    
             // Kiểm tra thông tin đầu vào
-            if (!email || !username || !password || !name || !id || !birthdate || !address || !phone || !gender) {
+            if (!email || !username || !password || !name || !id || !phone || !gender) {
                 alert('Please fill all fields');
                 return;
             }
-
+    
             // Lưu thông tin vào localStorage
             const userData = {
                 email: email,
@@ -119,19 +110,17 @@
                 password: password,
                 name: name,
                 id: id,
-                birthdate: birthdate,
-                address: address,
                 phone: phone,
                 gender: gender
             };
-
+    
             localStorage.setItem('userData', JSON.stringify(userData));
-
+    
             // Chuyển hướng đến trang Sign In
             alert('Sign up successful! Please log in.');
             window.location.href = '../user/signin.html';
         });
     </script>
-
+    
 </body>
 </html>
