@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Montserrat", Helvetica, sans-serif;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library - Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-cyan-100">
+
+    <!-- Header -->
+    <header class="bg-white p-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <img src="../assets/image/logo.png" alt="BookHub Logo" class="h-8 w-auto mr-2">
+            <h1 class="text-black text-xl font-bold">Library</h1>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="bg-slate-400 text-slate-950 w-64 min-h-screen p-4">
+            <nav>
+                <ul>
+                    <li class="mb-4">
+                        <a href="../user/homepage.html" class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i class="fas fa-book"></i><span class="ml-2">Catalog</span></a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="../user/account.html" class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i class="fas fa-user"></i><span class="ml-2">Account</span></a>
+                    </li>
+                    <li class="mb-4">
+                        <a href="../user/history.html" class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i class="fas fa-history"></i><span class="ml-2">History</span></a>
+                    </li>
+                    <li>
+                        <a href="../user/signin.html" class="flex items-center hover:bg-gray-500 p-2 rounded transition-colors duration-200"><i class="fas fa-sign-out-alt"></i><span class="ml-2">Log Out</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8">
+            <!-- Account Info -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-6">
+                    <div class="relative">
+                        <img id="avatarPreview" src="../assets/image/default user.jpg" alt="Avatar" class="w-32 h-32 bg-gray-300 rounded-full object-cover">
+                        <input id="avatarInput" type="file" accept="image/*" class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gray-200 cursor-pointer opacity-0">
+                        <label for="avatarInput" class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer">
+                            <i class="fas fa-pencil-alt text-gray-600"></i>
+                        </label>
+                    </div>
+                    <div class="ml-6">
+                        <p id="accountName" class="text-xl font-semibold"></p>
+                        <button id="changePasswordBtn" class="text-blue-500 hover:underline">Change Password</button>
+                    </div>
+                </div>
+
+                <!-- Info Form -->
+                <form id="accountForm" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-gray-700">Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="idNumber" class="block text-gray-700">ID Number</label>
+                        <input type="text" id="idNumber" placeholder="Enter your ID number" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-gray-700">Phone Number</label>
+                        <input type="tel" id="phone" placeholder="Enter your phone number" class="w-full p-3 border border-gray-300 rounded-lg">
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Change Password Popup -->
+<div id="passwordModal" class="modal">
+    <div class="modal-content">
+        <h2 class="text-xl font-bold mb-4">Change Password</h2>
+        <form id="changePasswordForm" class="space-y-4">
+            <div>
+                <input type="password" id="currentPassword" placeholder="Enter your current password" class="w-full p-3 border border-gray-300 rounded-lg">
+            </div>
+            <div>
+                <input type="password" id="newPassword" placeholder="Enter your new password" class="w-full p-3 border border-gray-300 rounded-lg">
+            </div>
+            <div>
+                <input type="password" id="confirmPassword" placeholder="Enter your new password again" class="w-full p-3 border border-gray-300 rounded-lg">
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button type="button" class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400" onclick="closePasswordModal()">Hủy</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Xác nhận</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <script>
+        // Handle user data
+        document.addEventListener('DOMContentLoaded', function () {
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+
+            if (!userData.username || !userData.email) {
+                alert('User not logged in. Redirecting to sign-in page.');
+                window.location.href = '../user/signin.html';
+                return;
+            }
+
+            document.getElementById('accountName').textContent = userData.username;
+            document.getElementById('name').value = userData.username;
+            document.getElementById('email').value = userData.email;
+            document.getElementById('idNumber').value = userData.idNumber || '';
+            document.getElementById('phone').value = userData.phone || '';
+
+            if (userData.avatar) {
+                document.getElementById('avatarPreview').src = userData.avatar;
+            }
+        });
+
+        // Handle avatar upload
+        document.getElementById('avatarInput').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                    const userData = JSON.parse(localStorage.getItem('userData')) || {};
+                    userData.avatar = e.target.result;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Save account changes
+        document.getElementById('accountForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const idNumber = document.getElementById('idNumber').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+
+            if (!name || !email || !idNumber || !phone) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+            userData.username = name;
+            userData.email = email;
+            userData.idNumber = idNumber;
+            userData.phone = phone;
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            alert('Changes saved successfully!');
+        });
+
+        // Handle Change Password Modal
+        document.getElementById('changePasswordBtn').addEventListener('click', function () {
+            document.getElementById('passwordModal').style.display = 'flex';
+        });
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        document.getElementById('changePasswordForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const oldPassword = document.getElementById('oldPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+
+            if (!oldPassword || !newPassword) {
+                alert('Please fill in both fields.');
+                return;
+            }
+
+            const userData = JSON.parse(localStorage.getItem('userData')) || {};
+
+            if (userData.password !== oldPassword) {
+                alert('Old password is incorrect.');
+                return;
+            }
+
+            userData.password = newPassword;
+            localStorage.setItem('userData', JSON.stringify(userData));
+
+            alert('Password changed successfully!');
+            closePasswordModal();
+        });
+    </script>
+
+</body>
+</html>
