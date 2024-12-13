@@ -114,101 +114,116 @@
                 author: "F. Scott Fitzgerald",
                 publishYear: "1925",
                 genre: "Literary Fiction",
-                description: "The story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan."
+                description: "The story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
+                available: true
             },
             "To Kill a Mockingbird": {
                 title: "To Kill a Mockingbird",
                 author: "Harper Lee",
                 publishYear: "1960",
                 genre: "Literary Fiction",
-                description: "The story of racial injustice and the loss of innocence in the American South."
+                description: "The story of racial injustice and the loss of innocence in the American South.",
+                available: false
             },
             "1984": {
                 title: "1984",
                 author: "George Orwell",
                 publishYear: "1949",
                 genre: "Dystopian Fiction",
-                description: "A chilling depiction of a totalitarian regime that employs surveillance and propaganda to maintain control."
+                description: "A chilling depiction of a totalitarian regime that employs surveillance and propaganda to maintain control.",
+                available: true
             },
             "Pride and Prejudice": {
                 title: "Pride and Prejudice",
                 author: "Jane Austen",
                 publishYear: "1813",
                 genre: "Romantic Fiction",
-                description: "A romantic novel that explores the issues of class, marriage, and individuality in 19th-century England."
-            },
-            "The Catcher in the Rye": {
-                title: "The Catcher in the Rye",
-                author: "J.D. Salinger",
-                publishYear: "1951",
-                genre: "Literary Fiction",
-                description: "A story about teenage angst and alienation, narrated by the rebellious Holden Caulfield."
+                description: "A romantic novel that explores the issues of class, marriage, and individuality in 19th-century England.",
+                available: false
             },
             "Moby Dick": {
                 title: "Moby Dick",
                 author: "Herman Melville",
                 publishYear: "1851",
                 genre: "Adventure Fiction",
-                description: "The epic tale of Captain Ahab's obsessive quest to hunt down the white whale, Moby Dick."
+                description: "The epic tale of Captain Ahab's obsessive quest to hunt down the white whale, Moby Dick.",
+                available: true
             },
             "War and Peace": {
                 title: "War and Peace",
                 author: "Leo Tolstoy",
                 publishYear: "1869",
                 genre: "Historical Fiction",
-                description: "A sweeping narrative of Russian society during the Napoleonic era, exploring themes of love, fate, and history."
+                description: "A sweeping narrative of Russian society during the Napoleonic era, exploring themes of love, fate, and history.",
+                available: true
             },
             "The Hobbit": {
                 title: "The Hobbit",
                 author: "J.R.R. Tolkien",
                 publishYear: "1937",
                 genre: "Fantasy",
-                description: "A fantasy adventure that follows Bilbo Baggins on his journey with a group of dwarves to reclaim their homeland."
-            },
-            "The Picture of Dorian Gray": {
-                title: "The Picture of Dorian Gray",
-                author: "Oscar Wilde",
-                publishYear: "1890",
-                genre: "Philosophical Fiction",
-                description: "A novel that explores the consequences of vanity and moral corruption through the story of Dorian Gray."
+                description: "A fantasy adventure that follows Bilbo Baggins on his journey with a group of dwarves to reclaim their homeland.",
+                available: false
             },
             "Brave New World": {
                 title: "Brave New World",
                 author: "Aldous Huxley",
                 publishYear: "1932",
                 genre: "Dystopian Fiction",
-                description: "A satirical look at a future society driven by technological advances, consumerism, and state control."
+                description: "A satirical look at a future society driven by technological advances, consumerism, and state control.",
+                available: true
+            },
+            "The Catcher in the Rye": {
+                title: "The Catcher in the Rye",
+                author: "J.D. Salinger",
+                publishYear: "1951",
+                genre: "Literary Fiction",
+                description: "A story about teenage angst and alienation, narrated by the rebellious Holden Caulfield.",
+                available: true
+            },
+            "The Picture of Dorian Gray": {
+                title: "The Picture of Dorian Gray",
+                author: "Oscar Wilde",
+                publishYear: "1890",
+                genre: "Philosophical Fiction",
+                description: "A novel that explores the consequences of vanity and moral corruption through the story of Dorian Gray.",
+                available: false
             }
         };
 
         const bookTitles = Object.keys(bookData);
         let loadedBooks = 0;
 
-        // Hiển thị chi tiết sách trong modal
         function showBookDetails(bookTitle) {
             const book = bookData[bookTitle];
+            const isAvailable = book.available;
+
             const detailsHTML = `
                 <div class="flex items-center space-x-6">
                     <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?ixlib=rb-4.0.3&auto=format&fit=crop&w=687&q=80" alt="${book.title} cover" class="w-32 h-48 object-cover rounded-md">
                     <div class="space-y-3">
                         <h3 class="text-3xl font-semibold text-gray-800">${book.title}</h3>
                         <p class="text-lg text-gray-600">by ${book.author}</p>
-                        <p class="text-sm text-gray-500">Available for borrowing: Yes</p>
                         <p class="text-sm text-gray-500">Publish Year: ${book.publishYear}</p>
                         <p class="text-sm text-gray-500">Genre: ${book.genre}</p>
                         <p class="text-gray-700">Description: ${book.description}</p>
+                        <p class="text-sm ${isAvailable ? 'text-green-500' : 'text-red-500'}">
+                            Status: ${isAvailable ? 'Available' : 'Unavailable'}
+                        </p>
                     </div>
                 </div>
                 <div class="flex justify-end space-x-4">
                     <button onclick="closeBookDetailsModal()" class="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-400">Close</button>
-                    <button onclick="showBorrowModal()" class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Borrow</button>
+                    <button onclick="${isAvailable ? 'showBorrowModal()' : ''}" 
+                            class="px-6 py-2 rounded-md ${isAvailable ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}">
+                        Borrow
+                    </button>
                 </div>
             `;
             document.getElementById('bookDetails').innerHTML = detailsHTML;
             bookDetailsModal.classList.remove('hidden');
         }
 
-        // Đóng modal Book Details
         function closeBookDetailsModal() {
             bookDetailsModal.classList.add('hidden');
         }
@@ -269,72 +284,6 @@
                 closeBorrowModal();
             }
         });
-        // Function to filter books and display suggestions
-        search.addEventListener('input', function () {
-    const query = this.value.trim().toLowerCase();
-    suggestions.innerHTML = ''; // Clear previous suggestions
-
-    if (query) {
-        const matches = bookTitles.filter(title => title.toLowerCase().includes(query));
-        if (matches.length > 0) {
-            matches.forEach(title => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = 'p-2 hover:bg-gray-100 cursor-pointer'; // Tailwind classes
-                suggestionItem.textContent = title;
-                suggestionItem.addEventListener('click', () => {
-                    search.value = title; // Fill the search bar with the selected title
-                    suggestions.innerHTML = ''; // Clear suggestions
-                    showBookDetails(title); // Show book details in the modal
-                });
-                suggestions.appendChild(suggestionItem);
-            });
-            suggestions.classList.remove('hidden');
-        } else {
-            suggestions.classList.add('hidden');
-        }
-    } else {
-        suggestions.classList.add('hidden');
-    }
-});
-
-// Hide suggestions when clicking outside
-document.addEventListener('click', function (e) {
-    if (!search.contains(e.target) && !suggestions.contains(e.target)) {
-        suggestions.classList.add('hidden');
-    }
-});
-
-// Hàm Borrow sách
-function borrowBook() {
-    const bookTitle = document.querySelector("#bookDetails h3").textContent; // Lấy tiêu đề sách từ modal
-    const bookAuthor = document.querySelector("#bookDetails p.text-lg").textContent.replace("by ", ""); // Lấy tên tác giả
-    const pickupDate = document.getElementById("pickupDate").value; // Ngày mượn
-    const returnDate = document.getElementById("returnDate").value; // Ngày trả
-
-    if (!pickupDate || !returnDate) {
-        alert("Please select a valid pickup and return date.");
-        return;
-    }
-
-    // Tạo đối tượng sách mượn
-    const borrowedBook = {
-        title: bookTitle,
-        author: bookAuthor,
-        pickupDate,
-        returnDate,
-        status: "Still Valid"
-    };
-
-    // Lưu sách vào localStorage
-    let borrowedBooks = JSON.parse(localStorage.getItem("borrowedBooks")) || [];
-    borrowedBooks.push(borrowedBook);
-    localStorage.setItem("borrowedBooks", JSON.stringify(borrowedBooks));
-
-    // Đóng popup và thông báo thành công
-    closeBorrowModal();
-    alert("Book borrowed successfully!");
-}
-
     </script>
 </body>
 </html>
