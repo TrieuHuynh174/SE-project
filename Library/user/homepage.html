@@ -25,7 +25,7 @@
             <input id="search" type="text" placeholder="Search books..." class="py-2 px-4 pr-10 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-300 border border-gray-300">
             <button class="absolute right-3 top-2 text-gray-600"><i class="fas fa-search"></i></button>
             <div id="suggestions" class="hidden absolute top-full mt-1 bg-white w-full shadow-md rounded">
-                <!-- Search suggestions can appear here -->
+                <!-- Search suggestions will appear here -->
             </div>
         </div>
     </header>
@@ -62,7 +62,22 @@
 
         <!-- Main Content -->
         <main class="flex-1 p-8">
-            <h2 class="text-3xl font-bold mb-6">Featured Books</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold">Featured Books</h2>
+                <div>
+                    <label for="genreFilter" class="block text-gray-700 mb-2 text-sm">Filter by Genre:</label>
+                    <select id="genreFilter" class="p-2 border rounded">
+                        <option value="">All Genres</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Romantic">Romantic</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="History">History</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Science Fiction">Science Fiction</option>
+                        <option value="Mystery">Mystery</option>
+                    </select>
+                </div>
+            </div>
             <div id="book-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <!-- Book items will be dynamically added here -->
             </div>
@@ -107,13 +122,14 @@
         const pickupDate = document.getElementById('pickupDate');
         const returnDate = document.getElementById('returnDate');
         const bookGrid = document.getElementById('book-grid');
+        const genreFilter = document.getElementById('genreFilter');
 
         const bookData = {
             "The Great Gatsby": {
                 title: "The Great Gatsby",
                 author: "F. Scott Fitzgerald",
                 publishYear: "1925",
-                genre: "Literary Fiction",
+                genre: "Fiction",
                 description: "The story of the mysteriously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
                 available: true
             },
@@ -121,7 +137,7 @@
                 title: "To Kill a Mockingbird",
                 author: "Harper Lee",
                 publishYear: "1960",
-                genre: "Literary Fiction",
+                genre: "Fiction",
                 description: "The story of racial injustice and the loss of innocence in the American South.",
                 available: false
             },
@@ -129,7 +145,7 @@
                 title: "1984",
                 author: "George Orwell",
                 publishYear: "1949",
-                genre: "Dystopian Fiction",
+                genre: "Science Fiction",
                 description: "A chilling depiction of a totalitarian regime that employs surveillance and propaganda to maintain control.",
                 available: true
             },
@@ -137,7 +153,7 @@
                 title: "Pride and Prejudice",
                 author: "Jane Austen",
                 publishYear: "1813",
-                genre: "Romantic Fiction",
+                genre: "Romantic",
                 description: "A romantic novel that explores the issues of class, marriage, and individuality in 19th-century England.",
                 available: false
             },
@@ -145,7 +161,7 @@
                 title: "Moby Dick",
                 author: "Herman Melville",
                 publishYear: "1851",
-                genre: "Adventure Fiction",
+                genre: "Adventure",
                 description: "The epic tale of Captain Ahab's obsessive quest to hunt down the white whale, Moby Dick.",
                 available: true
             },
@@ -153,7 +169,7 @@
                 title: "War and Peace",
                 author: "Leo Tolstoy",
                 publishYear: "1869",
-                genre: "Historical Fiction",
+                genre: "History",
                 description: "A sweeping narrative of Russian society during the Napoleonic era, exploring themes of love, fate, and history.",
                 available: true
             },
@@ -165,19 +181,11 @@
                 description: "A fantasy adventure that follows Bilbo Baggins on his journey with a group of dwarves to reclaim their homeland.",
                 available: false
             },
-            "Brave New World": {
-                title: "Brave New World",
-                author: "Aldous Huxley",
-                publishYear: "1932",
-                genre: "Dystopian Fiction",
-                description: "A satirical look at a future society driven by technological advances, consumerism, and state control.",
-                available: true
-            },
             "The Catcher in the Rye": {
                 title: "The Catcher in the Rye",
                 author: "J.D. Salinger",
                 publishYear: "1951",
-                genre: "Literary Fiction",
+                genre: "Fiction",
                 description: "A story about teenage angst and alienation, narrated by the rebellious Holden Caulfield.",
                 available: true
             },
@@ -185,7 +193,7 @@
                 title: "The Picture of Dorian Gray",
                 author: "Oscar Wilde",
                 publishYear: "1890",
-                genre: "Philosophical Fiction",
+                genre: "Mystery",
                 description: "A novel that explores the consequences of vanity and moral corruption through the story of Dorian Gray.",
                 available: false
             }
@@ -236,15 +244,52 @@
             borrowModal.classList.add('hidden');
         }
 
-        pickupDate.addEventListener('change', function() {
-            const pickup = new Date(this.value);
-            const return_date = new Date(pickup);
-            return_date.setDate(pickup.getDate() + 30);
-            returnDate.valueAsDate = return_date;
-        });
+        function filterBooksByGenre() {
+            const selectedGenre = genreFilter.value;
+            bookGrid.innerHTML = '';
+
+            const filteredBooks = bookTitles.filter(title => {
+                const book = bookData[title];
+                return selectedGenre === '' || book.genre === selectedGenre;
+            });
+
+            filteredBooks.forEach(title => {
+                bookGrid.appendChild(createBookElement(title));
+            });
+        }
+
+        function searchBooks() {
+            const query = search.value.trim().toLowerCase();
+            suggestions.innerHTML = '';
+
+            if (query) {
+                const matches = bookTitles.filter(title => title.toLowerCase().includes(query));
+                if (matches.length > 0) {
+                    matches.forEach(title => {
+                        const suggestionItem = document.createElement('div');
+                        suggestionItem.className = 'p-2 hover:bg-gray-100 cursor-pointer';
+                        suggestionItem.textContent = title;
+                        suggestionItem.addEventListener('click', () => {
+                            search.value = title;
+                            suggestions.innerHTML = '';
+                            showBookDetails(title);
+                        });
+                        suggestions.appendChild(suggestionItem);
+                    });
+                    suggestions.classList.remove('hidden');
+                } else {
+                    suggestions.classList.add('hidden');
+                }
+            } else {
+                suggestions.classList.add('hidden');
+            }
+        }
+
+        search.addEventListener('input', searchBooks);
 
         document.addEventListener('DOMContentLoaded', function() {
             loadMoreBooks();
+            genreFilter.addEventListener('change', filterBooksByGenre);
         });
 
         function loadMoreBooks() {
